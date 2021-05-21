@@ -44,7 +44,8 @@ class LinkController extends Controller
  
          $input['link'] = $request->link;
          $input['code'] = uniqid();
- 
+         $input['clicks'] = 0;
+         
          ShortLink::create($input);
 
          $shortLinks = ShortLink::latest()->get();
@@ -90,6 +91,7 @@ class LinkController extends Controller
         }
         if ($arr['link']) {
             $link->link = $arr['link'];
+            $link->clicks = 0;
         }
         $link->save();
         return redirect()->route('links.index');
@@ -109,11 +111,16 @@ class LinkController extends Controller
         //return view('url/shortenLink', compact('shortLinks'));
     }
 
-
-    public function shortenLink($code)
+    public function shortenLink(ShortLink $link)
     {
+        $code = $link->code;
         $find = ShortLink::where('code', $code)->first();
-
         return redirect($find->link);
+    }
+
+    public function addClick(ShortLink $link){
+        $link->clicks ++;
+        $link->save();
+        return response()->json($link);
     }
 }

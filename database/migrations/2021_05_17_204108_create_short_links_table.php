@@ -18,6 +18,7 @@ class CreateShortLinksTable extends Migration
             $table->timestamps();
             $table->string('code');
             $table->string('link');
+            $table->string('clicks');
         });
     }
 

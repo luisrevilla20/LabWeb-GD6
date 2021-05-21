@@ -18,6 +18,7 @@ class ShortLink extends Model
     protected $fillable = [
         'code',
         'link',
+        'clicks',
     ];
 
 }

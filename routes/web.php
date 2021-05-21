@@ -16,7 +16,8 @@ use App\Http\Controllers\LinkController;
 */
 
 Route::resource('links', 'App\Http\Controllers\LinkController');
-Route::get('{code}', 'App\Http\Controllers\LinkController@shortenLink')->name('shorten.link');
+Route::get('{link}', 'App\Http\Controllers\LinkController@shortenLink')->name('shorten.link');
+Route::put('{link}', 'App\Http\Controllers\LinkController@addClick')->name('click.link');
 
 Route::get('/', function () {
     return redirect('/links');

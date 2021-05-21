@@ -33,17 +33,18 @@
                                 <th>ID</th>
                                 <th>Short Link</th>
                                 <th>Link</th>
+                                <th>Clicks</th>
                                 <th></th>
                                 <th></th>
                             </tr>
                         </thead>
-
                         <tbody>
                             @foreach($shortLinks as $row)
                                 <tr>
                                     <td>{{ $row->id }}</td>
                                     <td>{{ $row->link }}</td>
-                                    <td><a href="{{ route('shorten.link', $row->code) }}" target="_blank">{{ route('shorten.link', $row->code) }}</a></td>
+                                    <td><a onclick="clickLink({{$row}})" href="{{ route('shorten.link', $row) }}" target="_blank">{{ route('shorten.link', $row->code) }}</a></td>
+                                    <td id="{{ 'clicks' . $row->id}}">{{ $row->clicks }}</td>
                                     <td class="text-center"><a href="{{ route('links.edit', ['link' => $row]) }}" class="btn btn-secondary">Edit</a></td>
                                     <td  class="text-center">
                                         <form action="{{ route('links.destroy', ['link' => $row]) }}" method="post">
@@ -60,3 +61,33 @@
         </div>
     </div>
 @endsection
+
+@push('layout_end_body')
+
+<script>
+
+function clickLink(link){
+    let theURL='{{ route('click.link', 0)}}' + link.id;
+    $.ajax({
+            url: theURL,
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'Access-Control-Allow-Origin' : '*',
+            },
+            data: {
+                link: link
+            }
+        })
+        .done(function(response) {
+            $('#clicks'+ link.id).html(response.clicks);
+        })
+        .fail(function(jqXHR, response) {
+            console.log('Fallido', response);
+        });
+}
+
+</script>
+
+@endpush
