@@ -8,10 +8,10 @@
         <div class="card">
 
             <div class="card-header">
-                <form method="POST" action="{{ route('generate.shorten.link.post') }}">
+                <form method="POST" action="{{ route('links.store') }}">
                     @csrf
                     <div class="input-group mb-3">
-                    <input type="text" name="link" class="form-control" placeholder="Enter URL" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                    <input type="url" name="link" class="form-control" placeholder="Enter URL" aria-label="Recipient's username" aria-describedby="basic-addon2">
                     <div class="input-group-append">
                         <button class="btn btn-success" type="submit">Generate Shorten Link</button>
                     </div>
@@ -33,6 +33,8 @@
                                 <th>ID</th>
                                 <th>Short Link</th>
                                 <th>Link</th>
+                                <th></th>
+                                <th></th>
                             </tr>
                         </thead>
 
@@ -40,8 +42,16 @@
                             @foreach($shortLinks as $row)
                                 <tr>
                                     <td>{{ $row->id }}</td>
-                                    <td><a href="{{ route('shorten.link', $row->code) }}" target="_blank">{{ route('shorten.link', $row->code) }}</a></td>
                                     <td>{{ $row->link }}</td>
+                                    <td><a href="{{ route('shorten.link', $row->code) }}" target="_blank">{{ route('shorten.link', $row->code) }}</a></td>
+                                    <td class="text-center"><a href="{{ route('links.edit', ['link' => $row]) }}" class="btn btn-secondary">Edit</a></td>
+                                    <td  class="text-center">
+                                        <form action="{{ route('links.destroy', ['link' => $row]) }}" method="post">
+                                            @csrf
+                                            @method('DELETE')
+                                            <input type="submit" value="Delete" class="btn btn-danger">
+                                        </form>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
